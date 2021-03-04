@@ -13,12 +13,12 @@ import java.lang.reflect.Method;
  * <p></p>
  *
  * @author : wangheng
- * @date : 2021-03-04 17:21
+ * @date : 2021-03-04 17:37
  **/
 @Aspect
 @Component
-public class HLogAspect {
-    @Pointcut("@annotation(com.geewaza.code.springboot.aop.log.ULog)")
+public class ApiLogAspect {
+    @Pointcut("@annotation(com.geewaza.code.springboot.aop.log.ApiLog)")
     public void annotationPointCut() {
     }
 
