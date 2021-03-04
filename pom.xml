@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.geewaza.code</groupId>
+    <artifactId>springboot-sample</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <modules>
+        <module>springboot-aop</module>
+        <module>springboot-web</module>
+    </modules>
+    <packaging>pom</packaging>
+
+
+    <properties>
+        <app.version>1.0.0-SNAPSHOT</app.version>
+        <jdk.version>1.8</jdk.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot.version>2.3.0.RELEASE</spring-boot.version>
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.geewaza.code</groupId>
+                <artifactId>springboot-aop</artifactId>
+                <version>${app.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.geewaza.code</groupId>
+                <artifactId>springboot-web</artifactId>
+                <version>${app.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+</project>
