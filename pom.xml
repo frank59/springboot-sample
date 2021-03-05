@@ -10,6 +10,7 @@
     <modules>
         <module>springboot-aop</module>
         <module>springboot-web</module>
+        <module>mybatisplus</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -45,6 +46,16 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>1.2.75</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>3.3.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>3.3.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
