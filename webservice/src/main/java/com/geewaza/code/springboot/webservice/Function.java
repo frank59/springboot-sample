@@ -16,6 +16,7 @@ public class Function {
 
     public static void main(String[] args) {
         Endpoint.publish("http://localhost:8089/service/function", new Function());
-        System.out.println("Publish Success:listen port 8089");
+        System.out.println("Publish Success:listen port 8089. visit: http://localhost:8089/service/function?wsdl");
+
     }
 }
