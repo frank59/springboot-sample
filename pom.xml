@@ -12,6 +12,7 @@
         <module>springboot-web</module>
         <module>mybatisplus</module>
         <module>mybatis</module>
+        <module>webservice</module>
     </modules>
     <packaging>pom</packaging>
 
