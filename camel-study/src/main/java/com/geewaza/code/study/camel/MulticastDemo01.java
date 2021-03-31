@@ -2,10 +2,14 @@ package com.geewaza.code.study.camel;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.camel.AggregationStrategy;
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 
+import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -57,18 +61,33 @@ public class MulticastDemo01 {
                 from("jetty:http://localhost:8080/camel/jetty01")
                         .routeId(routeId)
                         .process(exchange -> {
-                            System.out.println("in route:" + routeId);
+                            System.out.println("- in route:" + routeId);
                             String body = exchange.getMessage().getBody(String.class);
                             body = markRouteId(JSONObject.parseObject(body), routeId);
                             exchange.getMessage().setBody(body);
                         })
-                        .multicast().parallelProcessing().to("direct:after_jetty01", "direct:after_jetty02")
+                        .multicast(new AggregationStrategy() {
+                            @Override
+                            public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
+                                if (!Objects.isNull(oldExchange)) {
+                                    if (!Objects.isNull(oldExchange.getMessage().getHeader("responseBody"))) {
+                                        newExchange.getMessage().setHeader("responseBody", oldExchange.getMessage().getHeader("responseBody"));
+                                    }
+                                }
+                                return newExchange;
+                            }
+                        }).parallelProcessing().streaming()
+                        .to("direct:after_jetty01", "direct:after_jetty02")
                         .end()
                         .process(exchange -> {
-                            System.out.println("back in route:" + routeId);
-                            String body = exchange.getMessage().getBody(String.class);
-                            body = markRouteId(JSONObject.parseObject(body), routeId);
-                            exchange.getMessage().setBody(body);
+                            System.out.println("- back in route:" + routeId);
+                            if (!Objects.isNull(exchange.getMessage().getHeader("responseBody"))) {
+                                exchange.getMessage().setBody(exchange.getMessage().getHeader("responseBody"));
+                            } else {
+                                String body = exchange.getMessage().getBody(String.class);
+                                body = markRouteId(JSONObject.parseObject(body), routeId);
+                                exchange.getMessage().setBody(body);
+                            }
                         })
                 ;
             }
@@ -81,15 +100,18 @@ public class MulticastDemo01 {
                 from("direct:after_jetty01")
                         .routeId(routeId)
                         .process(exchange -> {
-                            System.out.println("in route:" + routeId);
+                            System.out.println("- in route:" + routeId);
                             String body = exchange.getMessage().getBody(String.class);
                             body = markRouteId(JSONObject.parseObject(body), routeId);
+                            int sleep = new Random().nextInt(5);
+                            TimeUnit.SECONDS.sleep(sleep);
+                            System.out.println("after sleep " +sleep+ "s in " + routeId);
                             System.out.println(body);
-                            TimeUnit.SECONDS.sleep(2);
-                            System.out.println("after sleep:" + routeId);
                             exchange.getMessage().setBody(body);
                         })
-                .to("direct:after_route01")
+                        .multicast().parallelProcessing().streaming()
+                        .to("direct:after_route01")
+
                 ;
             }
         });
@@ -101,11 +123,11 @@ public class MulticastDemo01 {
                 from("direct:after_route01")
                         .routeId(routeId)
                         .process(exchange -> {
-                            System.out.println("in route:" + routeId);
+                            System.out.println("- in route:" + routeId);
                             String body = exchange.getMessage().getBody(String.class);
                             body = markRouteId(JSONObject.parseObject(body), routeId);
                             System.out.println(body);
-
+                            exchange.getMessage().setHeader("responseBody", body);
                             exchange.getMessage().setBody(body);
                         })
 //                        .to("direct:after_route01")
@@ -122,14 +144,16 @@ public class MulticastDemo01 {
                 from("direct:after_jetty02")
                         .routeId(routeId)
                         .process(exchange -> {
-                            System.out.println("in route:" + routeId);
+                            System.out.println("- in route:" + routeId);
                             String body = exchange.getMessage().getBody(String.class);
                             body = markRouteId(JSONObject.parseObject(body), routeId);
+                            int sleep = new Random().nextInt(5);
+                            TimeUnit.SECONDS.sleep(sleep);
+                            System.out.println("after sleep " +sleep+ "s in " + routeId);
                             System.out.println(body);
-                            TimeUnit.SECONDS.sleep(1);
-                            System.out.println("after sleep:" + routeId);
                             exchange.getMessage().setBody(body);
                         })
+                        .multicast().parallelProcessing().streaming()
                         .to("direct:after_route02");
             }
         });
@@ -141,10 +165,11 @@ public class MulticastDemo01 {
                 from("direct:after_route02")
                         .routeId(routeId)
                         .process(exchange -> {
-                            System.out.println("in route:" + routeId);
+                            System.out.println("- in route:" + routeId);
                             String body = exchange.getMessage().getBody(String.class);
                             body = markRouteId(JSONObject.parseObject(body), routeId);
                             System.out.println(body);
+                            exchange.getMessage().setHeader("responseBody", body);
                             exchange.getMessage().setBody(body);
                         })
 //                        .to("direct:after_route01")
@@ -158,6 +183,7 @@ public class MulticastDemo01 {
     public static void initContext() {
         System.out.println("init camel context...");
         camelContext = new DefaultCamelContext();
+        camelContext.setTracing(true);
     }
 
     public static String markRouteId(JSONObject body, String routeId) {
