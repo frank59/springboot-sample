@@ -1,0 +1,7 @@
+###
+GET http://localhost:8080/camel/jetty01
+Content-Type: application/json
+
+> {%
+client.log(response.body);
+%}

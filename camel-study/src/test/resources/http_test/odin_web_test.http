@@ -1,0 +1,7 @@
+###
+GET http://odin.geewaza.com:9002/
+Content-Type: application/json
+
+> {%
+client.log(response.body);
+%}

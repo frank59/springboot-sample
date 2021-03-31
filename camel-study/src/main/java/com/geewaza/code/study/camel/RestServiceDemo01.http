@@ -1,0 +1,7 @@
+###
+GET http://localhost/hello/123
+Content-Type: application/json
+
+> {%
+client.log(response.body);
+%}
