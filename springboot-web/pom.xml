@@ -34,7 +34,7 @@
     </dependencies>
 
     <build>
-        <finalName>springboot-web.jar</finalName>
+        <finalName>springboot-web</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
