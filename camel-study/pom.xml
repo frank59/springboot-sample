@@ -11,6 +11,7 @@
 
     <artifactId>camel-study</artifactId>
 
+
     <dependencies>
         <!-- camel -->
         <dependency>
