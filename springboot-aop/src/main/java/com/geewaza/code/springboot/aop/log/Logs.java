@@ -12,7 +12,7 @@ public enum Logs {
     /**
      * 系统日志
      */
-    SYS(LoggerFactory.getLogger(Logs.class));
+    DEFAULT(LoggerFactory.getLogger(Logs.class));
 
     Logs(Logger logger) {
         this.logger = logger;

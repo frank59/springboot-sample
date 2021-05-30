@@ -13,8 +13,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ApiLog {
-    Logs logger();
+    Logs logger() default Logs.DEFAULT;
 
-    String prefix();
-
+    String prefix() default "test";
 }
