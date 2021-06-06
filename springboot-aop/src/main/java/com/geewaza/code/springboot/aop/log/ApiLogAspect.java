@@ -40,18 +40,23 @@ public class ApiLogAspect {
                 watchMap.set(stopWatch);
                 header = true;
             }
-            stopWatch.split();
+//            stopWatch.split();
             //让代理方法执行
             result = joinPoint.proceed();
             // 2.相当于后置通知(方法成功执行之后走这里)
-            log.getLogger().info("正常");// 设置操作结果
+            // 设置操作结果
+            log.getLogger().info("正常");
         } catch (Throwable e) {
             // 3.相当于异常通知部分
-            log.getLogger().info("失败");// 设置操作结果
+            e.printStackTrace();
+            // 设置操作结果
+            log.getLogger().info("失败");
         } finally {
             // 4.相当于最终通知
-            log.getLogger().info("{}", new Date());// 设置操作日期
-            log.getLogger().info(prefix);// 添加日志记录
+            // 设置操作日期
+            log.getLogger().info("{}", new Date());
+            // 添加日志记录
+            log.getLogger().info(prefix);
             if (header) {
                 StopWatch stopWatch = watchMap.get();
             }
