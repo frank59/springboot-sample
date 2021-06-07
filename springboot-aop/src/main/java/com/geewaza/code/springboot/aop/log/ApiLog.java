@@ -1,8 +1,6 @@
 package com.geewaza.code.springboot.aop.log;
 
 
-import org.slf4j.Logger;
-
 import java.lang.annotation.*;
 
 /**
@@ -15,6 +13,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ApiLog {
-    Logger logger = null;
-    String prefix = "";
+    Logs logger() default Logs.DEFAULT;
+
+    String prefix() default "test";
 }
