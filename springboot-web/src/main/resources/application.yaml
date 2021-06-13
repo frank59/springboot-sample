@@ -48,3 +48,14 @@ logging:
   config: classpath:log4j2.xml
   level:
     root: INFO
+# actuator
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: metrics,health,info

@@ -11,7 +11,7 @@ spring:
   profiles:
     active: dev
   application:
-    name: amc-esb-web
+    name: geewaza-web
     #Jackson 配置
   jackson:
     #日期格式化
@@ -48,3 +48,14 @@ logging:
   config: classpath:log4j2.xml
   level:
     root: INFO
+# actuator
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: metrics,health,info
